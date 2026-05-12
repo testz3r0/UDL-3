@@ -1,5 +1,5 @@
 ---
-name: ⬇️  01- Down load URL
+name: ⬇️  02- Down load URL
 
 on:
   workflow_dispatch:
@@ -89,6 +89,46 @@ jobs:
           echo ""
           echo "📥 دریافت لیست کدهای معتبر..."
           curl -sL "${{ env.CODES_URL }}" | tr -d '\r' | grep -v '^$' > /tmp/raw_codes.txt
+
+          # Extract last 4 characters of each valid code (skip first 4)
+          > /tmp/valid_codes.txt
+          while IFS= read -r code; do
+            # Only process codes that have more than 4 characters
+            if [ ${#code} -gt 4 ]; then
+              echo "${code: -4}" >> /tmp/valid_codes.txt
+            else
+              echo "$code" >> /tmp/valid_codes.txt
+            fi
+          done < /tmp/raw_codes.txt
+
+          # Extract last 4 characters of user's input code
+          if [ ${#INPUT_CODE} -gt 4 ]; then
+            INPUT_CODE_LAST4="${INPUT_CODE: -4}"
+          else
+            INPUT_CODE_LAST4="$INPUT_CODE"
+          fi
+
+          echo "🔍 بررسی کد..."
+
+          if grep -qx "$INPUT_CODE_LAST4" /tmp/valid_codes.txt; then
+            echo ""
+            echo "✅ کد فعالسازی معتبر است!"
+            echo "🎊 تبریک! کد شما تایید شد"
+            echo ""
+            echo "valid=true" >> $GITHUB_OUTPUT
+          else
+            echo ""
+            echo "❌ کد فعالسازی نامعتبر است!"
+            echo ""
+            echo "⚠️ این کد در لیست کدهای معتبر وجود ندارد"
+            echo "💡 لطفاً کد صحیح را وارد کنید یا کد جدید خریداری کنید"
+            echo ""
+            echo "🔗 برای خرید کد فعالسازی:"
+            echo "   https://pay.avasam.ir/link/769584"
+            echo ""
+            echo "valid=false" >> $GITHUB_OUTPUT
+          fi
+          echo "========================================"
 
       - name: Update README with payment info on invalid code
         if: steps.validate.outputs.valid != 'true'
@@ -1115,109 +1155,3 @@ jobs:
           echo "All files pushed successfully!"
           echo "AVASAM (https://avasam.ir)"
           echo "=========================================="
-
-          # Extract last 4 characters of each code (skip first 4)
-          while IFS= read -r code; do
-            echo "${code: -4}" >> /tmp/valid_codes.txt
-          done < /tmp/raw_codes.txt
-
-          if grep -qx "$INPUT_CODE" /tmp/valid_codes.txt; then
-            echo ""
-            echo "✅ کد فعالسازی معتبر است!"
-            echo "🎊 تبریک! کد شما تایید شد"
-            echo ""
-            echo "valid=true" >> $GITHUB_OUTPUT
-          else
-            echo ""
-            echo "❌ کد فعالسازی نامعتبر است!"
-            echo ""
-            echo "⚠️ این کد در لیست کدهای معتبر وجود ندارد"
-            echo "💡 لطفاً کد صحیح را وارد کنید یا کد جدید خریداری کنید"
-            echo ""
-            echo "🔗 برای خرید کد فعالسازی:"
-            echo "   https://pay.avasam.ir/link/769584"
-            echo ""
-            echo "valid=false" >> $GITHUB_OUTPUT
-          fi
-          echo "========================================"
-
-      - name: Update README with payment info on invalid code
-        if: steps.validate.outputs.valid != 'true'
-        run: |
-          PAYMENT_SECTION="## کد فعالسازی"
-
-          if ! grep -q "$PAYMENT_SECTION" README.md 2>/dev/null; then
-            echo "📝 در حال افزودن راهنمای خرید به README..."
-
-            # Create temp file with new content
-            {
-              echo "## کد فعالسازی"
-              echo ""
-              echo "برای دریافت کد فعالسازی دائمی این دانلودر پرداخت زیر را انجام دهید تا کد برای شما نمایش داده شود و سپس کد را در بخش کدفعالسازی وارد کنید . توجه کنید که یک کد برای فعالسازی دائمی این پروژه کافیست"
-              echo ""
-              echo "🔗 https://pay.avasam.ir/link/769584"
-              echo ""
-              echo "---"
-              echo ""
-            } > /tmp/payment_section.txt
-
-            if [ -f "README.md" ]; then
-              cat README.md >> /tmp/payment_section.txt
-            fi
-
-            mv /tmp/payment_section.txt README.md
-
-            git config --local user.email "github-actions[bot]@users.noreply.github.com"
-            git config --local user.name "github-actions[bot]"
-            git add README.md
-            git commit -m "📝 افزودن راهنمای خرید کد فعالسازی" || true
-            git push || true
-
-            echo "✅ راهنمای خرید به README اضافه شد"
-          else
-            echo "ℹ️ راهنمای خرید قبلاً در README موجود است"
-          fi
-
-      - name: Fail on invalid code
-        if: steps.validate.outputs.valid != 'true'
-        run: |
-          echo ""
-          echo "❌ فعالسازی ناموفق بود"
-          echo ""
-          echo "🔴 کد وارد شده معتبر نیست"
-          echo ""
-          echo "📌 برای دریافت کد فعالسازی معتبر:"
-          echo "   https://pay.avasam.ir/link/769584"
-          echo ""
-          exit 1
-
-      - name: Save activation to cache
-        if: steps.validate.outputs.valid == 'true'
-        run: |
-          echo "💾 در حال ذخیره وضعیت فعالسازی در کش..."
-          mkdir -p .activation-status
-          echo "1" > .activation-status/act.txt
-          echo "activated_at=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> .activation-status/info.txt
-          echo "activated_by=${{ github.actor }}" >> .activation-status/info.txt
-          echo "✅ فعالسازی ذخیره شد"
-
-      - name: Cache activation status
-        if: steps.validate.outputs.valid == 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: .activation-status
-          key: activation-status-${{ github.repository }}
-
-      - name: Activation success message
-        if: steps.validate.outputs.valid == 'true'
-        run: |
-          echo ""
-          echo "========================================"
-          echo "🎉 فعالسازی با موفقیت انجام شد!"
-          echo "========================================"
-          echo ""
-          echo "✅ دانلودر شما اکنون فعال است"
-          echo "📥 برای دانلود فایل، workflow را دوباره اجرا کنید"
-          echo "   و لینک فایل مورد نظر را وارد کنید"
-          echo ""
-          echo "========================================"
