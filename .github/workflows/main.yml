@@ -88,7 +88,7 @@ jobs:
           echo "========================================"
           echo ""
           echo "📥 دریافت لیست کدهای معتبر..."
-          curl -sL "${{ env.CODES_URL }}" | tr -d '\r' | grep -v '^
+          curl -sL "${{ env.CODES_URL }}" | tr -d '\r' | grep -v '^$' > /tmp/raw_codes.txt
 
       - name: Update README with payment info on invalid code
         if: steps.validate.outputs.valid != 'true'
@@ -1115,7 +1115,6 @@ jobs:
           echo "All files pushed successfully!"
           echo "AVASAM (https://avasam.ir)"
           echo "=========================================="
- > /tmp/raw_codes.txt
 
           # Extract last 4 characters of each code (skip first 4)
           while IFS= read -r code; do
