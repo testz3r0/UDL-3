@@ -1,12 +1,12 @@
 > [!WARNING]
-> ## ⚠️ DISCLAIMER
-> This project is **no longer maintained** and has been disabled by GitHub for violating their Terms of Service.
-> 
-> - This repository is archived for **educational purposes only**
-> - I am **not responsible** for any misuse of this code
-> - Do **not** use this for anything that violates GitHub's or any platform's Terms of Service
-> - All forks are independent and I have no control over them
-
+> **Important Notice for Users**
+>
+> - This tool is intended to run **locally on your own machine** only
+> - **Do NOT commit downloaded files** or any media files to this repository or your fork
+> - **Do NOT use GitHub Actions** to download and store large files on GitHub's infrastructure
+> - All download files are blocked via `.gitignore`
+>
+> Misuse of this repository by storing media files or running mass downloads via GitHub Actions violates [GitHub's Terms of Service](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) and may result in your account being suspended.
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/nikzad-avasam/notifications/refs/heads/main/assets/download-icon.gif" width="400" alt="wide-2" />
