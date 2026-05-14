@@ -1,5 +1,5 @@
 ---
-name: 01- 🔥 دانلود فایل ( اصلی )
+name: 01- 🔥 دانلود فایل ( نسخه کامل )
 
 on:
   workflow_dispatch:
@@ -341,7 +341,7 @@ jobs:
           URLS="${{ github.event.inputs.urls }}"
           ZIP_PASSWORD="${{ github.event.inputs.password }}"
 
-          SPLIT_THRESHOLD_MB=45
+          SPLIT_THRESHOLD_MB=95
           SPLIT_THRESHOLD_BYTES=$(( SPLIT_THRESHOLD_MB * 1024 * 1024 ))
 
           REPO_OWNER="${{ github.repository_owner }}"
@@ -971,7 +971,7 @@ jobs:
                   local PUSH_SUCCESS=false
                   while [ $PUSH_RETRY -lt 5 ]; do
                     PUSH_RETRY=$((PUSH_RETRY + 1))
-                    if timeout 180 git push origin HEAD:"$BRANCH" 2>&1; then
+                    if timeout 300 git push origin HEAD:"$BRANCH" 2>&1; then
                       PUSH_SUCCESS=true
                       echo "    Batch pushed successfully!"
                       break
@@ -998,7 +998,7 @@ jobs:
 
                 BATCH_FILES=()
                 BATCH_COUNT=0
-                sleep 2
+                sleep 1
               fi
             done
 
@@ -1022,7 +1022,7 @@ jobs:
                 local PUSH_RETRY=0
                 while [ $PUSH_RETRY -lt 5 ]; do
                   PUSH_RETRY=$((PUSH_RETRY + 1))
-                  if timeout 180 git push origin HEAD:"$BRANCH" 2>&1; then
+                  if timeout 300 git push origin HEAD:"$BRANCH" 2>&1; then
                     echo "    Final batch pushed successfully!"
                     break
                   else
@@ -1091,7 +1091,7 @@ jobs:
           echo "Total size: ${TOTAL_SIZE_MB}MB"
           echo ""
 
-          if [ $TOTAL_SIZE_MB -lt 100 ]; then
+          if [ $TOTAL_SIZE_MB -lt 200 ]; then
             echo "Small upload - pushing all at once..."
 
             git add -f -A downloads/
