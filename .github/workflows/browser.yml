@@ -1,4 +1,4 @@
-name: 🌐 04- مرورگر وب
+name: 03- 🌐 مرورگر وب
 
 on:
   workflow_dispatch:
