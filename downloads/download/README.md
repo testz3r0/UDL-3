@@ -7,7 +7,7 @@
 | Property | Value |
 |----------|-------|
 | **Original File** | `download` |
-| **Total Size** | **3 parts** - **190.20 MB** |
+| **Total Size** | **3 parts** - **276.07 MB** |
 | **Status** | **Complete (100%)** |
 | **Password Protected** | **YES** |
 
