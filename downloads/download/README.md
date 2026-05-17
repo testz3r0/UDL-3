@@ -7,7 +7,7 @@
 | Property | Value |
 |----------|-------|
 | **Original File** | `download` |
-| **Total Size** | **2 parts** - **145.40 MB** |
+| **Total Size** | **3 parts** - **190.20 MB** |
 | **Status** | **Complete (100%)** |
 | **Password Protected** | **YES** |
 
@@ -18,7 +18,8 @@
 | # | File | Link |
 |---|------|------|
 | 1 | `download.z01` | [Download](https://github.com/testz3r0/UDL-3/raw/main/downloads/download/download.z01) |
-| 2 | `download.zip` | [Download](https://github.com/testz3r0/UDL-3/raw/main/downloads/download/download.zip) |
+| 2 | `download.z02` | [Download](https://github.com/testz3r0/UDL-3/raw/main/downloads/download/download.z02) |
+| 3 | `download.zip` | [Download](https://github.com/testz3r0/UDL-3/raw/main/downloads/download/download.zip) |
 
 ---
 
